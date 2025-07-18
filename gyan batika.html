@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gyan Batika Result Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      width: 320px;
+      text-align: center;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    button {
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    ul {
+      padding-left: 0;
+      list-style: none;
+    }
+    ul li {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📘 Gyan Batika Result Checker</h2>
+
+    <label for="class">Select Class:</label>
+    <select id="class">
+      <option value="">--Choose Class--</option>
+      <option value="1">Class 1</option>
+      <option value="2">Class 2</option>
+      <option value="3">Class 3</option>
+      <option value="4">Class 4</option>
+    </select>
+
+    <label for="roll">Enter Roll Number (1-10):</label>
+    <input type="number" id="roll" min="1" max="10" />
+
+    <button onclick="checkResult()">Check Result</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const students = {
+      1: [
+        { name: "Amit", marks: { Nepali: 80, English: 85, Math: 78, Science: 88, Social: 76, Grammar: 82 } },
+        { name: "Sunita", marks: { Nepali: 90, English: 92, Math: 85, Science: 79, Social: 88, Grammar: 84 } },
+        { name: "Rohan", marks: { Nepali: 70, English: 68, Math: 75, Science: 72, Social: 74, Grammar: 70 } },
+        { name: "Kiran", marks: { Nepali: 66, English: 70, Math: 60, Science: 58, Social: 65, Grammar: 62 } },
+        { name: "Nisha", marks: { Nepali: 80, English: 75, Math: 77, Science: 73, Social: 72, Grammar: 78 } },
+        { name: "Deepak", marks: { Nepali: 85, English: 88, Math: 82, Science: 84, Social: 86, Grammar: 87 } },
+        { name: "Sita", marks: { Nepali: 68, English: 65, Math: 70, Science: 67, Social: 66, Grammar: 69 } },
+        { name: "Rahul", marks: { Nepali: 78, English: 80, Math: 76, Science: 74, Social: 79, Grammar: 75 } },
+        { name: "Anita", marks: { Nepali: 92, English: 90, Math: 89, Science: 91, Social: 93, Grammar: 94 } },
+        { name: "Manoj", marks: { Nepali: 75, English: 72, Math: 70, Science: 78, Social: 76, Grammar: 74 } }
+      ],
+      2: [
+        { name: "Priya", marks: { Nepali: 82, English: 79, Math: 88, Science: 85, Social: 80, Grammar: 83 } },
+        { name: "Vikas", marks: { Nepali: 74, English: 70, Math: 65, Science: 72, Social: 68, Grammar: 71 } },
+        { name: "Maya", marks: { Nepali: 90, English: 89, Math: 92, Science: 91, Social: 88, Grammar: 90 } },
+        { name: "Ravi", marks: { Nepali: 66, English: 64, Math: 60, Science: 58, Social: 61, Grammar: 65 } },
+        { name: "Geeta", marks: { Nepali: 81, English: 80, Math: 84, Science: 83, Social: 79, Grammar: 82 } },
+        { name: "Sohan", marks: { Nepali: 87, English: 85, Math: 86, Science: 88, Social: 89, Grammar: 87 } },
+        { name: "Kavita", marks: { Nepali: 69, English: 70, Math: 72, Science: 74, Social: 68, Grammar: 71 } },
+        { name: "Tina", marks: { Nepali: 75, English: 78, Math: 80, Science: 79, Social: 77, Grammar: 76 } },
+        { name: "Naresh", marks: { Nepali: 85, English: 84, Math: 86, Science: 82, Social: 88, Grammar: 85 } },
+        { name: "Suman", marks: { Nepali: 71, English: 70, Math: 69, Science: 72, Social: 74, Grammar: 70 } }
+      ],
+      3: [
+        { name: "Ajay", marks: { Nepali: 79, English: 81, Math: 80, Science: 82, Social: 77, Grammar: 79 } },
+        { name: "Komal", marks: { Nepali: 83, English: 82, Math: 84, Science: 85, Social: 81, Grammar: 80 } },
+        { name: "Vijay", marks: { Nepali: 78, English: 79, Math: 77, Science: 75, Social: 76, Grammar: 74 } },
+        { name: "Meena", marks: { Nepali: 70, English: 71, Math: 69, Science: 68, Social: 72, Grammar: 70 } },
+        { name: "Rekha", marks: { Nepali: 89, English: 90, Math: 91, Science: 88, Social: 87, Grammar: 90 } },
+        { name: "Nikhil", marks: { Nepali: 65, English: 66, Math: 68, Science: 67, Social: 64, Grammar: 66 } },
+        { name: "Payal", marks: { Nepali: 91, English: 92, Math: 90, Science: 93, Social: 89, Grammar: 90 } },
+        { name: "Jatin", marks: { Nepali: 74, English: 73, Math: 72, Science: 70, Social: 75, Grammar: 76 } },
+        { name: "Seema", marks: { Nepali: 68, English: 69, Math: 67, Science: 66, Social: 70, Grammar: 68 } },
+        { name: "Arun", marks: { Nepali: 80, English: 81, Math: 79, Science: 82, Social: 78, Grammar: 80 } }
+      ],
+      4: [
+        { name: "Ritika", marks: { Nepali: 90, English: 88, Math: 89, Science: 87, Social: 90, Grammar: 91 } },
+        { name: "Dinesh", marks: { Nepali: 85, English: 84, Math: 83, Science: 86, Social: 82, Grammar: 84 } },
+        { name: "Ritu", marks: { Nepali: 78, English: 80, Math: 77, Science: 79, Social: 81, Grammar: 78 } },
+        { name: "Kapil", marks: { Nepali: 72, English: 70, Math: 69, Science: 68, Social: 71, Grammar: 70 } },
+        { name: "Ramesh", marks: { Nepali: 66, English: 67, Math: 65, Science: 64, Social: 68, Grammar: 66 } },
+        { name: "Sanjay", marks: { Nepali: 91, English: 90, Math: 92, Science: 89, Social: 93, Grammar: 91 } },
+        { name: "Neha", marks: { Nepali: 88, English: 87, Math: 85, Science: 86, Social: 89, Grammar: 87 } },
+        { name: "Lokesh", marks: { Nepali: 70, English: 72, Math: 71, Science: 73, Social: 74, Grammar: 72 } },
+        { name: "Bhavna", marks: { Nepali: 80, English: 79, Math: 81, Science: 82, Social: 78, Grammar: 80 } },
+        { name: "Gopal", marks: { Nepali: 84, English: 83, Math: 85, Science: 86, Social: 82, Grammar: 84 } }
+      ]
+    };
+
+    function checkResult() {
+      const classNum = document.getElementById("class").value;
+      const rollNum = parseInt(document.getElementById("roll").value);
+      const resultDiv = document.getElementById("result");
+
+      if (!classNum || !rollNum || rollNum < 1 || rollNum > 10) {
+        resultDiv.innerHTML = "⚠️ Please select a class and valid roll number (1-10).";
+        return;
+      }
+
+      const student = students[classNum][rollNum - 1];
+      if (!student) {
+        resultDiv.innerHTML = "❌ No student found for this roll number.";
+        return;
+      }
+
+      const marks = student.marks;
+      let total = 0;
+      let subjectsHTML = "";
+
+      for (const [subject, mark] of Object.entries(marks)) {
+        subjectsHTML += `<li>${subject}: ${mark}</li>`;
+        total += mark;
+      }
+
+      const average = (total / Object.keys(marks).length).toFixed(2);
+
+      resultDiv.innerHTML = `
+        <p>✅ Name: <strong>${student.name}</strong></p>
+        <ul>${subjectsHTML}</ul>
+        <p>🔢 Total Marks: <strong>${total}</strong></p>
+        <p>📊 Average: <strong>${average}</strong></p>
+      `;
+    }
+  </script>
+</body>
+</html>
